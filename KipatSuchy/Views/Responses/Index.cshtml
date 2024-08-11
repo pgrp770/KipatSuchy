@@ -1,0 +1,147 @@
+﻿@model KipatSuchy.ViewModels.AddResponseVM
+
+@{
+    ViewData["Title"] = "Index";
+    int a = 0;
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<h3>Active thrests</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Amount
+            </th>
+            <th>
+                Weapon
+            </th>
+            <th>
+               Origin
+            </th>
+
+            <th>
+               LaunchTime
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Threats)
+        {
+            <tr>
+                <td>
+                    @foreach (var response in Model.Responses)
+                    {
+                        if (response.ThreatId == item.Id)
+                        {
+                            a += 1;
+                        }
+                    }
+                    @(item.Amount - a)
+                    @{
+                        a = 0;
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Weapon)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Origin)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.LaunchTime)
+                </td>
+                <td>
+                    <a  asp-action="Yirut" asp-route-amount="@item.Amount" asp-route-id="@item.Id">Yaret</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Protector
+            </th>
+            <th>
+                Left Missiles
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Managers)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Protector)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeftMissile)
+                </td>
+
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+    <h3>Yurtu</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Amount
+            </th>
+            <th>
+                Weapon
+            </th>
+            <th>
+                Origin
+            </th>
+
+            <th>
+                LaunchTime
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Threats)
+        {
+            <tr>
+                <td>
+                   
+                    @foreach(var response in Model.Responses)
+                    {
+                        if (response.ThreatId == item.Id)
+                        {
+                            a += 1;
+                        }
+                    }
+                    @a
+                    @{a = 0;}
+                    
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Weapon)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Origin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LaunchTime)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
