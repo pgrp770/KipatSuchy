@@ -14,11 +14,12 @@ namespace KipatSuchy.Controllers
     public class ThreatsController : Controller
     {
         private readonly KipatSuchyContext _context;
-        private readonly AttackHandlerService _attackHandlerService = new AttackHandlerService();
+        private readonly AttackHandlerService _attackHandlerService; 
 
         public ThreatsController(KipatSuchyContext context)
         {
             _context = context;
+            _attackHandlerService = new AttackHandlerService();
 
              }
 
@@ -26,14 +27,19 @@ namespace KipatSuchy.Controllers
         {
             return View(await _context.Threats.ToListAsync());
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> StartAttack(Threat t)
+        [HttpGet]
+        [Route("Threats/StartAttack/{threatId}")]
+        public async Task<IActionResult> StartAttack(int threatId)
         {
-            await _attackHandlerService.RegisterAndRunAttackTask(t);
-
-            return View(t);
+            var a = _context.Threats.Where(x => x.Id == threatId).FirstOrDefault();
+            a.IsActive = true;
+            await _attackHandlerService.RegisterAndRunAttackTask(a);
+            a.IsActive = false;
+            a.puzaz = true;
+            a.Amount -= 1;
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index), a);
         }
 
         // GET: Threats
@@ -59,6 +65,9 @@ namespace KipatSuchy.Controllers
         // GET: Threats/Create
         public IActionResult Create()
         {
+            
+            ViewData["Origins"] = new SelectList(HelperData.Origins.Keys.ToList());
+            ViewData["Weapon"] = new SelectList(HelperData.Veapons.Keys.ToList());
             return View();
         }
 
@@ -69,6 +78,7 @@ namespace KipatSuchy.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Amount,Weapon,Origin,IsActive,LaunchTime")] Threat threat)
         {
+                threat.IsActive = false;
             if (ModelState.IsValid)
             {
                 _context.Add(threat);

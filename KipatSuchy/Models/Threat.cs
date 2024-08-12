@@ -7,8 +7,9 @@
         public string Weapon { get; set; }
         public string Origin { get; set; }
         public bool IsActive { get; set; } = false;
+        public bool puzaz { get; set; } = false;
         public DateTime? LaunchTime { get; set; }
-        public string? ActiveId { get; set; }
-       
+      
+ 
     }
 }
